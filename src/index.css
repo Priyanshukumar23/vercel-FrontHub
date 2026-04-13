@@ -313,6 +313,7 @@ body.dark-theme ::-webkit-scrollbar-thumb {
   animation: spin 3s linear infinite;
 }
 
+
 @keyframes spin {
   from {
     transform: rotate(0deg);
@@ -320,5 +321,31 @@ body.dark-theme ::-webkit-scrollbar-thumb {
 
   to {
     transform: rotate(360deg);
+  }
+}
+
+/* Global Responsive Adjustments */
+@media (max-width: 768px) {
+  html {
+    font-size: 14px;
+    /* Slightly smaller base font size */
+  }
+
+  .container {
+    padding: 0 15px;
+  }
+
+  h1 {
+    font-size: 2.5rem !important;
+    /* Force smaller h1 on mobile if inline styles are used excessively */
+  }
+
+  h2 {
+    font-size: 2rem !important;
+  }
+
+  /* Adjust modals/glass panels if they are fixed width */
+  .glass-panel {
+    max-width: 100%;
   }
 }
