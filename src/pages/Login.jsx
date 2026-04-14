@@ -23,7 +23,8 @@ const Login = () => {
 
             localStorage.setItem('token', res.data.token);
             localStorage.setItem('user', JSON.stringify(res.data.user));
-            window.location.href = '/dashboard'; // Force reload to update navbar state or use context
+            navigate('/dashboard');
+            window.dispatchEvent(new Event('storage')); // Triggers navbar update
         } catch (err) {
             setError(err.response?.data?.msg || 'Login failed');
         }
