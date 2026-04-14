@@ -66,7 +66,7 @@ const Profile = () => {
     if (loading) return <div style={{ paddingTop: '100px', textAlign: 'center' }}>Loading...</div>;
     if (error) return <div style={{ paddingTop: '100px', textAlign: 'center', color: 'var(--error)' }}>{error}</div>;
 
-    const profilePicUrl = previewUrl || (profile.profilePicture ? `http://localhost:5003${profile.profilePicture}` : null);
+    const profilePicUrl = previewUrl || (profile.profilePicture ? `${import.meta.env.VITE_API_URL || 'http://localhost:5003'}${profile.profilePicture}` : null);
 
     return (
         <div className="container" style={{ paddingTop: '120px', paddingBottom: '50px' }}>
