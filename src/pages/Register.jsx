@@ -17,8 +17,8 @@ const Register = () => {
             const res = await api.post('/auth/register', formData);
             localStorage.setItem('token', res.data.token);
             localStorage.setItem('user', JSON.stringify(res.data.user));
+            window.dispatchEvent(new Event('userUpdated'));
             navigate('/dashboard');
-            window.dispatchEvent(new Event('storage')); // Triggers navbar update
         } catch (err) {
             setError(err.response?.data?.msg || 'Registration failed');
         }
