@@ -9,6 +9,8 @@ const Dashboard = () => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
     const [showTutorial, setShowTutorial] = useState(false);
+    const [allGroups, setAllGroups] = useState([]);
+    const [discoverLoading, setDiscoverLoading] = useState(true);
 
     useEffect(() => {
         const fetchUser = async () => {
@@ -27,7 +29,19 @@ const Dashboard = () => {
                 setLoading(false);
             }
         };
+        const fetchDiscoverGroups = async () => {
+            try {
+                const res = await api.get('/groups');
+                setAllGroups(res.data);
+            } catch (err) {
+                console.error(err);
+            } finally {
+                setDiscoverLoading(false);
+            }
+        };
+
         fetchUser();
+        fetchDiscoverGroups();
     }, []);
 
     const handleTutorialComplete = () => {
@@ -96,8 +110,81 @@ const Dashboard = () => {
                                 <Link to="/" className="btn btn-outline">Explore Groups</Link>
                             </div>
                         )}
+                        {/* Discover Groups Section */}
+                        {!discoverLoading && (
+                            <DiscoverGroupsSection
+                                joinedGroups={user?.joinedGroups || []}
+                                allGroups={allGroups}
+                            />
+                        )}
                     </>
                 )}
+            </div>
+        </div>
+    );
+};
+
+const DiscoverGroupsSection = ({ joinedGroups, allGroups }) => {
+    // Filter out groups the user has already joined
+    const joinedIds = new Set(joinedGroups.map(g => g._id));
+    const discoverGroups = allGroups.filter(g => !joinedIds.has(g._id)).slice(0, 3); // Show top 3 suggestions
+
+    if (discoverGroups.length === 0) return null;
+
+    return (
+        <div style={{ marginTop: '60px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '30px' }}>
+                <h2 style={{ fontSize: '2rem' }}>Discover New Communities</h2>
+                <Link to="/" className="btn btn-outline" style={{ fontSize: '0.9rem' }}>See All</Link>
+            </div>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '30px' }}>
+                {discoverGroups.map((group, index) => (
+                    <motion.div
+                        key={group._id}
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ delay: index * 0.1 }}
+                        className="glass-panel"
+                        style={{
+                            padding: '25px',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            border: '1px solid var(--glass-border)',
+                            background: 'rgba(255, 255, 255, 0.03)'
+                        }}
+                    >
+                        <div style={{ display: 'flex', gap: '15px', marginBottom: '15px' }}>
+                            <div style={{
+                                width: '60px',
+                                height: '60px',
+                                borderRadius: '12px',
+                                overflow: 'hidden',
+                                background: 'var(--bg-secondary)',
+                                flexShrink: 0
+                            }}>
+                                {group.image ? (
+                                    <img
+                                        src={group.image.startsWith('http') ? group.image : `${api.defaults.baseURL.replace('/api', '')}${group.image}`}
+                                        alt={group.name}
+                                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                    />
+                                ) : (
+                                    <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-secondary)', fontSize: '0.7rem' }}>No Image</div>
+                                )}
+                            </div>
+                            <div>
+                                <h3 style={{ fontSize: '1.2rem', marginBottom: '4px' }}>{group.name}</h3>
+                                <span style={{ fontSize: '0.8rem', color: 'var(--accent)' }}>{group.category}</span>
+                            </div>
+                        </div>
+                        <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginBottom: '20px', flex: 1 }}>
+                            {group.description.substring(0, 80)}...
+                        </p>
+                        <Link to={`/group/${group._id}`} className="btn btn-primary" style={{ textAlign: 'center', fontSize: '0.9rem', padding: '8px' }}>
+                            View & Join
+                        </Link>
+                    </motion.div>
+                ))}
             </div>
         </div>
     );
