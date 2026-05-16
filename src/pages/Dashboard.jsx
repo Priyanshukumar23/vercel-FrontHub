@@ -82,27 +82,57 @@ const Dashboard = () => {
 
                         {user?.joinedGroups?.length > 0 ? (
                             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '30px' }}>
-                                {user.joinedGroups.map((group, index) => (
-                                    <motion.div
-                                        key={group._id}
-                                        initial={{ opacity: 0, y: 20 }}
-                                        animate={{ opacity: 1, y: 0 }}
-                                        transition={{ delay: index * 0.1 }}
-                                        className="glass-panel"
-                                        style={{ padding: '20px', display: 'flex', flexDirection: 'column', height: '100%' }}
-                                    >
-                                        <h3 style={{ fontSize: '1.5rem', marginBottom: '10px' }}>{group.name}</h3>
-                                        <span style={{ display: 'inline-block', padding: '4px 12px', background: 'rgba(139, 92, 246, 0.1)', color: 'var(--accent)', borderRadius: '20px', fontSize: '0.8rem', marginBottom: '15px', width: 'fit-content' }}>
-                                            {group.category}
-                                        </span>
-                                        <p style={{ color: 'var(--text-secondary)', marginBottom: '20px', flex: 1 }}>
-                                            {group.description.substring(0, 100)}...
-                                        </p>
-                                        <Link to={`/group/${group._id}`} className="btn btn-outline" style={{ textAlign: 'center' }}>
-                                            View Group
-                                        </Link>
-                                    </motion.div>
-                                ))}
+                                {user.joinedGroups.map((group, index) => {
+                                    const groupImageUrl = group.image
+                                        ? (group.image.startsWith('http') ? group.image : `${api.defaults.baseURL.replace('/api', '')}${group.image}`)
+                                        : null;
+
+                                    return (
+                                        <motion.div
+                                            key={group._id}
+                                            initial={{ opacity: 0, y: 20 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            transition={{ delay: index * 0.1 }}
+                                            className="glass-panel"
+                                            style={{
+                                                padding: '25px',
+                                                display: 'flex',
+                                                flexDirection: 'column',
+                                                height: '100%',
+                                                minHeight: '250px',
+                                                backgroundImage: groupImageUrl ? `linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.8)), url(${groupImageUrl})` : undefined,
+                                                backgroundSize: 'cover',
+                                                backgroundPosition: 'center',
+                                                justifyContent: 'flex-end',
+                                                color: groupImageUrl ? 'white' : 'inherit',
+                                                border: groupImageUrl ? 'none' : '1px solid var(--glass-border)'
+                                            }}
+                                        >
+                                            <div style={{ position: 'relative', zIndex: 2 }}>
+                                                <h3 style={{ fontSize: '1.5rem', marginBottom: '10px', color: groupImageUrl ? 'white' : 'inherit' }}>{group.name}</h3>
+                                                <span style={{
+                                                    display: 'inline-block',
+                                                    padding: '4px 12px',
+                                                    background: groupImageUrl ? 'rgba(255,255,255,0.2)' : 'rgba(139, 92, 246, 0.1)',
+                                                    color: groupImageUrl ? 'white' : 'var(--accent)',
+                                                    borderRadius: '20px',
+                                                    fontSize: '0.8rem',
+                                                    marginBottom: '15px',
+                                                    width: 'fit-content',
+                                                    backdropFilter: groupImageUrl ? 'blur(5px)' : 'none'
+                                                }}>
+                                                    {group.category}
+                                                </span>
+                                                <p style={{ color: groupImageUrl ? 'rgba(255,255,255,0.9)' : 'var(--text-secondary)', marginBottom: '20px' }}>
+                                                    {group.description.substring(0, 80)}...
+                                                </p>
+                                                <Link to={`/group/${group._id}`} className="btn btn-primary" style={{ textAlign: 'center', width: '100%' }}>
+                                                    View Group
+                                                </Link>
+                                            </div>
+                                        </motion.div>
+                                    );
+                                })}
                             </div>
                         ) : (
                             <div style={{ textAlign: 'center', padding: '60px', background: 'var(--bg-secondary)', borderRadius: '16px' }}>
@@ -138,53 +168,55 @@ const DiscoverGroupsSection = ({ joinedGroups, allGroups }) => {
                 <Link to="/" className="btn btn-outline" style={{ fontSize: '0.9rem' }}>See All</Link>
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '30px' }}>
-                {discoverGroups.map((group, index) => (
-                    <motion.div
-                        key={group._id}
-                        initial={{ opacity: 0, scale: 0.95 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ delay: index * 0.1 }}
-                        className="glass-panel"
-                        style={{
-                            padding: '25px',
-                            display: 'flex',
-                            flexDirection: 'column',
-                            border: '1px solid var(--glass-border)',
-                            background: 'rgba(255, 255, 255, 0.03)'
-                        }}
-                    >
-                        <div style={{ display: 'flex', gap: '15px', marginBottom: '15px' }}>
-                            <div style={{
-                                width: '60px',
-                                height: '60px',
-                                borderRadius: '12px',
-                                overflow: 'hidden',
-                                background: 'var(--bg-secondary)',
-                                flexShrink: 0
-                            }}>
-                                {group.image ? (
-                                    <img
-                                        src={group.image.startsWith('http') ? group.image : `${api.defaults.baseURL.replace('/api', '')}${group.image}`}
-                                        alt={group.name}
-                                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                                    />
-                                ) : (
-                                    <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-secondary)', fontSize: '0.7rem' }}>No Image</div>
-                                )}
+                {discoverGroups.map((group, index) => {
+                    const groupImageUrl = group.image
+                        ? (group.image.startsWith('http') ? group.image : `${api.defaults.baseURL.replace('/api', '')}${group.image}`)
+                        : null;
+
+                    return (
+                        <motion.div
+                            key={group._id}
+                            initial={{ opacity: 0, scale: 0.95 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{ delay: index * 0.1 }}
+                            className="glass-panel"
+                            style={{
+                                padding: '25px',
+                                display: 'flex',
+                                flexDirection: 'column',
+                                minHeight: '250px',
+                                justifyContent: 'flex-end',
+                                border: groupImageUrl ? 'none' : '1px solid var(--glass-border)',
+                                background: groupImageUrl ? `linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.8)), url(${groupImageUrl})` : 'rgba(255, 255, 255, 0.03)',
+                                backgroundSize: 'cover',
+                                backgroundPosition: 'center',
+                                color: groupImageUrl ? 'white' : 'inherit'
+                            }}
+                        >
+                            <div style={{ position: 'relative', zIndex: 2 }}>
+                                <h3 style={{ fontSize: '1.2rem', marginBottom: '4px', color: groupImageUrl ? 'white' : 'inherit' }}>{group.name}</h3>
+                                <span style={{
+                                    display: 'inline-block',
+                                    fontSize: '0.8rem',
+                                    color: groupImageUrl ? 'white' : 'var(--accent)',
+                                    background: groupImageUrl ? 'rgba(255,255,255,0.2)' : 'none',
+                                    padding: groupImageUrl ? '2px 8px' : '0',
+                                    borderRadius: '10px',
+                                    backdropFilter: groupImageUrl ? 'blur(5px)' : 'none',
+                                    marginBottom: '10px'
+                                }}>
+                                    {group.category}
+                                </span>
+                                <p style={{ color: groupImageUrl ? 'rgba(255,255,255,0.9)' : 'var(--text-secondary)', fontSize: '0.9rem', marginBottom: '20px' }}>
+                                    {group.description.substring(0, 80)}...
+                                </p>
+                                <Link to={`/group/${group._id}`} className="btn btn-primary" style={{ textAlign: 'center', fontSize: '0.9rem', padding: '8px' }}>
+                                    View & Join
+                                </Link>
                             </div>
-                            <div>
-                                <h3 style={{ fontSize: '1.2rem', marginBottom: '4px' }}>{group.name}</h3>
-                                <span style={{ fontSize: '0.8rem', color: 'var(--accent)' }}>{group.category}</span>
-                            </div>
-                        </div>
-                        <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginBottom: '20px', flex: 1 }}>
-                            {group.description.substring(0, 80)}...
-                        </p>
-                        <Link to={`/group/${group._id}`} className="btn btn-primary" style={{ textAlign: 'center', fontSize: '0.9rem', padding: '8px' }}>
-                            View & Join
-                        </Link>
-                    </motion.div>
-                ))}
+                        </motion.div>
+                    );
+                })}
             </div>
         </div>
     );
