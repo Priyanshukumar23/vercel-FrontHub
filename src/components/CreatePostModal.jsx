@@ -83,7 +83,6 @@ const CreatePostModal = ({ onClose, onPostCreated }) => {
                         <label
                             htmlFor="image-upload"
                             style={{
-                                display: 'block',
                                 width: '100%',
                                 height: '200px',
                                 border: '2px dashed var(--glass-border)',

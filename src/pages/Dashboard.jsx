@@ -4,6 +4,9 @@ import { Link } from 'react-router-dom';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import OnboardingTutorial from '../components/OnboardingTutorial';
+import SpotlightCard from '../components/SpotlightCard';
+import MagneticButton from '../components/MagneticButton';
+import { Trophy, Clock, Users, ArrowRight, Plus, Sparkles, Activity, ShieldCheck } from 'lucide-react';
 
 const Dashboard = () => {
     const [user, setUser] = useState(null);
@@ -57,12 +60,53 @@ const Dashboard = () => {
                 {showTutorial && <OnboardingTutorial onComplete={handleTutorialComplete} />}
             </AnimatePresence>
             <div className="container">
-                <div className="glass-panel" style={{ padding: '40px', marginBottom: '40px' }}>
-                    <h1 style={{ fontSize: '2.5rem', marginBottom: '10px' }}>Welcome, {user?.username}!</h1>
-                    <p style={{ color: 'var(--text-secondary)' }}>
-                        {user?.role === 'admin' ? 'Admin Dashboard - Manage Groups' : 'Manage your groups and events here.'}
-                    </p>
-                </div>
+                <SpotlightCard float={true} className="dashboard-welcome-panel" style={{ padding: '36px 40px', marginBottom: '40px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '20px' }}>
+                        <div>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '12px' }}>
+                                <span className="hud-tag">
+                                    <span className="hud-pulse-dot" />
+                                    <span>Command Center / Online</span>
+                                </span>
+                                <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+                                    {user?.role === 'admin' ? '🛡️ Admin Verified' : '⚡ Active Builder'}
+                                </span>
+                            </div>
+                            <h1 style={{ fontSize: 'clamp(2rem, 3.5vw, 2.8rem)', fontWeight: 800, marginBottom: '8px', letterSpacing: '-0.02em' }}>
+                                Welcome, <span style={{ background: 'linear-gradient(135deg, var(--text-primary) 30%, var(--accent) 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>{user?.username}</span>!
+                            </h1>
+                            <p style={{ color: 'var(--text-secondary)', fontSize: '1.05rem', margin: 0 }}>
+                                {user?.role === 'admin'
+                                    ? 'Platform Command Center. Oversee communities, review reports, and manage hackathon submissions.'
+                                    : 'Your personal talent hub. Track registered hackathons, active guild chats, and project updates.'}
+                            </p>
+                        </div>
+
+                        <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
+                            <div style={{
+                                padding: '14px 22px',
+                                borderRadius: '16px',
+                                background: 'var(--glass)',
+                                border: '1px solid var(--glass-border)',
+                                textAlign: 'center'
+                            }}>
+                                <div style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--accent)' }}>
+                                    {user?.joinedGroups?.length || 0}
+                                </div>
+                                <div style={{ fontSize: '0.72rem', textTransform: 'uppercase', color: 'var(--text-muted)', letterSpacing: '0.8px', fontWeight: 600 }}>
+                                    Guilds Joined
+                                </div>
+                            </div>
+
+                            <MagneticButton to="/create-group" strength={0.3}>
+                                <button className="btn btn-primary" style={{ padding: '14px 24px', height: '100%' }}>
+                                    <Plus size={18} />
+                                    <span>New Guild</span>
+                                </button>
+                            </MagneticButton>
+                        </div>
+                    </div>
+                </SpotlightCard>
 
                 {/* Contest Section */}
                 <ContestSection isAdmin={user?.role === 'admin'} />
@@ -76,69 +120,68 @@ const Dashboard = () => {
                 ) : (
                     <>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '30px' }}>
-                            <h2 style={{ fontSize: '2rem' }}>My Groups</h2>
-                            <Link to="/create-group" className="btn btn-primary">Create New Group</Link>
+                            <div>
+                                <span className="hud-tag" style={{ marginBottom: '8px' }}>Your Network</span>
+                                <h2 style={{ fontSize: '2rem' }}>My Guilds & Communities</h2>
+                            </div>
+                            <MagneticButton to="/create-group">
+                                <button className="btn btn-primary">
+                                    <Plus size={18} />
+                                    <span>Create New Guild</span>
+                                </button>
+                            </MagneticButton>
                         </div>
 
                         {user?.joinedGroups?.length > 0 ? (
-                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '30px' }}>
+                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '30px' }}>
                                 {user.joinedGroups.map((group, index) => {
                                     const groupImageUrl = group.image
                                         ? (group.image.startsWith('http') ? group.image : `${api.defaults.baseURL.replace('/api', '')}${group.image}`)
                                         : null;
 
                                     return (
-                                        <motion.div
+                                        <SpotlightCard
                                             key={group._id}
-                                            initial={{ opacity: 0, y: 20 }}
-                                            animate={{ opacity: 1, y: 0 }}
-                                            transition={{ delay: index * 0.1 }}
-                                            className="glass-panel"
+                                            float={true}
+                                            floatDelay={index * 0.15}
                                             style={{
-                                                padding: '25px',
+                                                padding: '28px',
                                                 display: 'flex',
                                                 flexDirection: 'column',
-                                                height: '100%',
-                                                minHeight: '250px',
-                                                backgroundImage: groupImageUrl ? `linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.8)), url(${groupImageUrl})` : undefined,
+                                                minHeight: '270px',
+                                                backgroundImage: groupImageUrl ? `linear-gradient(rgba(7,10,17,0.35), rgba(7,10,17,0.85)), url(${groupImageUrl})` : undefined,
                                                 backgroundSize: 'cover',
                                                 backgroundPosition: 'center',
                                                 justifyContent: 'flex-end',
-                                                color: groupImageUrl ? 'white' : 'inherit',
-                                                border: groupImageUrl ? 'none' : '1px solid var(--glass-border)'
+                                                color: groupImageUrl ? '#ffffff' : 'inherit'
                                             }}
                                         >
                                             <div style={{ position: 'relative', zIndex: 2 }}>
-                                                <h3 style={{ fontSize: '1.5rem', marginBottom: '10px', color: groupImageUrl ? 'white' : 'inherit' }}>{group.name}</h3>
-                                                <span style={{
-                                                    display: 'inline-block',
-                                                    padding: '4px 12px',
-                                                    background: groupImageUrl ? 'rgba(255,255,255,0.2)' : 'rgba(139, 92, 246, 0.1)',
-                                                    color: groupImageUrl ? 'white' : 'var(--accent)',
-                                                    borderRadius: '20px',
-                                                    fontSize: '0.8rem',
-                                                    marginBottom: '15px',
-                                                    width: 'fit-content',
-                                                    backdropFilter: groupImageUrl ? 'blur(5px)' : 'none'
-                                                }}>
+                                                <span className="group-category-badge" style={{ marginBottom: '12px' }}>
                                                     {group.category}
                                                 </span>
-                                                <p style={{ color: groupImageUrl ? 'rgba(255,255,255,0.9)' : 'var(--text-secondary)', marginBottom: '20px' }}>
-                                                    {group.description.substring(0, 80)}...
+                                                <h3 style={{ fontSize: '1.45rem', marginBottom: '8px', color: groupImageUrl ? '#ffffff' : 'var(--text-primary)' }}>{group.name}</h3>
+                                                <p style={{ color: groupImageUrl ? 'rgba(255,255,255,0.85)' : 'var(--text-secondary)', marginBottom: '20px', fontSize: '0.92rem' }}>
+                                                    {group.description.substring(0, 85)}...
                                                 </p>
-                                                <Link to={`/group/${group._id}`} className="btn btn-primary" style={{ textAlign: 'center', width: '100%' }}>
-                                                    View Group
-                                                </Link>
+                                                <MagneticButton to={`/group/${group._id}`} style={{ width: '100%' }}>
+                                                    <button className="btn btn-primary" style={{ width: '100%', textAlign: 'center' }}>
+                                                        <span>Open Guild</span>
+                                                        <ArrowRight size={16} />
+                                                    </button>
+                                                </MagneticButton>
                                             </div>
-                                        </motion.div>
+                                        </SpotlightCard>
                                     );
                                 })}
                             </div>
                         ) : (
-                            <div style={{ textAlign: 'center', padding: '60px', background: 'var(--bg-secondary)', borderRadius: '16px' }}>
-                                <p style={{ fontSize: '1.2rem', color: 'var(--text-secondary)', marginBottom: '20px' }}>You haven't joined any groups yet.</p>
-                                <Link to="/" className="btn btn-outline">Explore Groups</Link>
-                            </div>
+                            <SpotlightCard style={{ textAlign: 'center', padding: '60px 30px', borderRadius: '20px' }}>
+                                <p style={{ fontSize: '1.2rem', color: 'var(--text-secondary)', marginBottom: '20px' }}>You haven't joined any guilds yet.</p>
+                                <MagneticButton to="/">
+                                    <button className="btn btn-outline">Explore Guilds</button>
+                                </MagneticButton>
+                            </SpotlightCard>
                         )}
                         {/* Discover Groups Section */}
                         {!discoverLoading && (
@@ -162,59 +205,58 @@ const DiscoverGroupsSection = ({ joinedGroups, allGroups }) => {
     if (discoverGroups.length === 0) return null;
 
     return (
-        <div style={{ marginTop: '60px' }}>
+        <div style={{ marginTop: '70px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '30px' }}>
-                <h2 style={{ fontSize: '2rem' }}>Discover New Communities</h2>
-                <Link to="/" className="btn btn-outline" style={{ fontSize: '0.9rem' }}>See All</Link>
+                <div>
+                    <span className="hud-tag" style={{ marginBottom: '8px' }}>Explore</span>
+                    <h2 style={{ fontSize: '2rem' }}>Discover New Communities</h2>
+                </div>
+                <MagneticButton to="/">
+                    <button className="btn btn-outline" style={{ fontSize: '0.9rem' }}>
+                        <span>Explore All</span>
+                        <ArrowRight size={16} />
+                    </button>
+                </MagneticButton>
             </div>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '30px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '30px' }}>
                 {discoverGroups.map((group, index) => {
                     const groupImageUrl = group.image
                         ? (group.image.startsWith('http') ? group.image : `${api.defaults.baseURL.replace('/api', '')}${group.image}`)
                         : null;
 
                     return (
-                        <motion.div
+                        <SpotlightCard
                             key={group._id}
-                            initial={{ opacity: 0, scale: 0.95 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            transition={{ delay: index * 0.1 }}
-                            className="glass-panel"
+                            float={true}
+                            floatDelay={index * 0.2}
                             style={{
-                                padding: '25px',
+                                padding: '28px',
                                 display: 'flex',
                                 flexDirection: 'column',
-                                minHeight: '250px',
+                                minHeight: '270px',
                                 justifyContent: 'flex-end',
-                                border: groupImageUrl ? 'none' : '1px solid var(--glass-border)',
-                                background: groupImageUrl ? `linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.8)), url(${groupImageUrl})` : 'rgba(255, 255, 255, 0.03)',
+                                background: groupImageUrl ? `linear-gradient(rgba(7,10,17,0.35), rgba(7,10,17,0.85)), url(${groupImageUrl})` : undefined,
                                 backgroundSize: 'cover',
                                 backgroundPosition: 'center',
-                                color: groupImageUrl ? 'white' : 'inherit'
+                                color: groupImageUrl ? '#ffffff' : 'inherit'
                             }}
                         >
                             <div style={{ position: 'relative', zIndex: 2 }}>
-                                <h3 style={{ fontSize: '1.2rem', marginBottom: '4px', color: groupImageUrl ? 'white' : 'inherit' }}>{group.name}</h3>
-                                <span style={{
-                                    display: 'inline-block',
-                                    fontSize: '0.8rem',
-                                    color: groupImageUrl ? 'white' : 'var(--accent)',
-                                    background: groupImageUrl ? 'rgba(255,255,255,0.2)' : 'none',
-                                    padding: groupImageUrl ? '2px 8px' : '0',
-                                    borderRadius: '10px',
-                                    backdropFilter: groupImageUrl ? 'blur(5px)' : 'none',
-                                    marginBottom: '10px'
-                                }}>
+                                <span className="group-category-badge" style={{ marginBottom: '12px' }}>
                                     {group.category}
                                 </span>
-                                <p style={{ color: groupImageUrl ? 'rgba(255,255,255,0.9)' : 'var(--text-secondary)', fontSize: '0.9rem', marginBottom: '20px' }}>
-                                    {group.description.substring(0, 80)}...
+                                <h3 style={{ fontSize: '1.35rem', marginBottom: '6px', color: groupImageUrl ? '#ffffff' : 'var(--text-primary)' }}>{group.name}</h3>
+                                <p style={{ color: groupImageUrl ? 'rgba(255,255,255,0.85)' : 'var(--text-secondary)', fontSize: '0.9rem', marginBottom: '20px' }}>
+                                    {group.description.substring(0, 85)}...
                                 </p>
-                                <Link to={`/group/${group._id}`} className="btn btn-primary" style={{ textAlign: 'center', fontSize: '0.9rem', padding: '8px' }}>
-                                    View & Join
-                                </Link>
+                                <MagneticButton to={`/group/${group._id}`} style={{ width: '100%' }}>
+                                    <button className="btn btn-primary" style={{ width: '100%', textAlign: 'center' }}>
+                                        <span>View & Join</span>
+                                        <ArrowRight size={16} />
+                                    </button>
+                                </MagneticButton>
                             </div>
-                        </motion.div>
+                        </SpotlightCard>
                     );
                 })}
             </div>
@@ -536,173 +578,233 @@ const ContestSection = ({ isAdmin }) => {
 
 
     if (contests.length === 0) return (
-        <div className="glass-panel" style={{ padding: '0', marginBottom: '40px', overflow: 'hidden', position: 'relative', minHeight: '300px' }}>
-            <h3 style={{
+        <SpotlightCard float={true} className="hackathon-spotlight-card" style={{ padding: '0', marginBottom: '40px', overflow: 'hidden', position: 'relative', minHeight: '340px' }}>
+            <div style={{
                 position: 'absolute',
-                top: '20px',
-                left: '30px',
+                top: '24px',
+                left: '28px',
                 zIndex: 10,
-                color: 'white',
-                background: 'rgba(0,0,0,0.5)',
-                padding: '5px 15px',
-                borderRadius: '20px',
-                backdropFilter: 'blur(5px)',
-                fontSize: '1.2rem'
+                display: 'flex',
+                alignItems: 'center',
+                gap: '10px'
             }}>
-                Today's Contests
-            </h3>
+                <span className="hud-tag">
+                    <span className="hud-pulse-dot" />
+                    <span>Featured Hackathon Arena</span>
+                </span>
+            </div>
 
             <AnimatePresence mode='wait'>
                 <motion.div
                     key={sliderIndex}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 1 }}
+                    initial={{ opacity: 0, scale: 1.05 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.98 }}
+                    transition={{ duration: 0.8 }}
                     style={{
                         width: '100%',
-                        height: '350px',
-                        backgroundImage: `url(${sliderImages[sliderIndex].url})`,
+                        height: '360px',
+                        backgroundImage: `linear-gradient(to top, rgba(7, 10, 17, 0.95) 15%, rgba(7, 10, 17, 0.4) 60%, rgba(7, 10, 17, 0.2)), url(${sliderImages[sliderIndex].url})`,
                         backgroundSize: 'cover',
                         backgroundPosition: 'center',
-                        position: 'relative'
+                        position: 'relative',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'flex-end',
+                        padding: '40px 32px'
                     }}
                 >
-                    <div style={{
-                        position: 'absolute',
-                        bottom: 0,
-                        left: 0,
-                        right: 0,
-                        background: 'linear-gradient(to top, rgba(0,0,0,0.8), transparent)',
-                        padding: '40px 30px 30px',
-                        color: 'white'
-                    }}>
-                        <motion.h2
-                            initial={{ y: 20, opacity: 0 }}
-                            animate={{ y: 0, opacity: 1 }}
-                            transition={{ delay: 0.2 }}
-                            style={{ fontSize: '2.2rem', marginBottom: '5px', color: 'white' }}
-                        >
-                            {sliderImages[sliderIndex].title}
-                        </motion.h2>
-                        <motion.p
-                            initial={{ y: 20, opacity: 0 }}
-                            animate={{ y: 0, opacity: 1 }}
-                            transition={{ delay: 0.3 }}
-                            style={{ fontSize: '1.1rem', opacity: 0.9 }}
-                        >
-                            {sliderImages[sliderIndex].description}
-                        </motion.p>
-                    </div>
+                    <motion.h2
+                        initial={{ y: 20, opacity: 0 }}
+                        animate={{ y: 0, opacity: 1 }}
+                        transition={{ delay: 0.2 }}
+                        style={{ fontSize: 'clamp(1.8rem, 3.2vw, 2.5rem)', fontWeight: 800, marginBottom: '8px', color: '#ffffff' }}
+                    >
+                        {sliderImages[sliderIndex].title}
+                    </motion.h2>
+                    <motion.p
+                        initial={{ y: 20, opacity: 0 }}
+                        animate={{ y: 0, opacity: 1 }}
+                        transition={{ delay: 0.3 }}
+                        style={{ fontSize: '1.05rem', color: 'rgba(255,255,255,0.85)', maxWidth: '600px' }}
+                    >
+                        {sliderImages[sliderIndex].description}
+                    </motion.p>
                 </motion.div>
             </AnimatePresence>
 
-            {/* Dots Indicator */}
-            <div style={{ position: 'absolute', bottom: '20px', right: '30px', display: 'flex', gap: '8px', zIndex: 10 }}>
+            {/* Glowing Slider Indicator Bars */}
+            <div style={{ position: 'absolute', bottom: '24px', right: '32px', display: 'flex', gap: '8px', zIndex: 10 }}>
                 {sliderImages.map((_, idx) => (
                     <div
                         key={idx}
                         onClick={() => setSliderIndex(idx)}
                         style={{
-                            width: '10px',
-                            height: '10px',
-                            borderRadius: '50%',
-                            background: idx === sliderIndex ? 'white' : 'rgba(255,255,255,0.4)',
+                            width: idx === sliderIndex ? '28px' : '8px',
+                            height: '6px',
+                            borderRadius: '4px',
+                            background: idx === sliderIndex ? 'var(--accent)' : 'rgba(255,255,255,0.4)',
                             cursor: 'pointer',
-                            transition: 'all 0.3s'
+                            transition: 'all 0.3s ease',
+                            boxShadow: idx === sliderIndex ? '0 0 10px var(--accent)' : 'none'
                         }}
                     />
                 ))}
             </div>
 
             {isAdmin && (
-                <button
-                    onClick={() => setShowCreateModal(true)}
-                    className="btn btn-primary"
-                    style={{ position: 'absolute', top: '20px', right: '20px', zIndex: 20 }}
-                >
-                    Create First Contest
-                </button>
+                <MagneticButton onClick={() => setShowCreateModal(true)} strength={0.3} style={{ position: 'absolute', top: '20px', right: '24px', zIndex: 20 }}>
+                    <button className="btn btn-primary" style={{ padding: '10px 20px', fontSize: '0.9rem' }}>
+                        <Plus size={16} />
+                        <span>Create Contest</span>
+                    </button>
+                </MagneticButton>
             )}
 
             {/* Render Create Modal if needed */}
             {showCreateModal && <CreateContestModal onClose={() => setShowCreateModal(false)} onCreated={fetchContests} />}
-        </div>
+        </SpotlightCard>
     );
 
     return (
         <>
-            <div className="glass-panel" style={{ padding: '30px', marginBottom: '40px', textAlign: 'left', background: 'var(--bg-secondary)', position: 'relative', overflow: 'hidden', minHeight: '300px' }}>
-
-
+            <SpotlightCard
+                float={true}
+                className="hackathon-spotlight-card"
+                style={{
+                    padding: '36px',
+                    marginBottom: '40px',
+                    position: 'relative',
+                    overflow: 'hidden',
+                    minHeight: '320px'
+                }}
+            >
                 <AnimatePresence mode='wait'>
                     <motion.div
                         key={contest._id}
-                        initial={{ opacity: 0, x: 20 }}
+                        initial={{ opacity: 0, x: 25 }}
                         animate={{ opacity: 1, x: 0 }}
-                        exit={{ opacity: 0, x: -20 }}
+                        exit={{ opacity: 0, x: -25 }}
                         transition={{ duration: 0.5, ease: "easeInOut" }}
                         style={{ width: '100%' }}
                     >
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '20px' }}>
-                            <div style={{ flex: 1 }}>
-                                <h2 style={{ fontSize: '2rem', marginBottom: '10px', color: 'var(--text-primary)' }}>{contest.title}</h2>
-                                <p style={{ color: 'var(--text-secondary)', marginBottom: '20px', fontSize: '1.1rem', lineHeight: '1.6' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '24px' }}>
+                            <div style={{ flex: 1, minWidth: '280px' }}>
+                                {/* Telemetry Badge Row */}
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '14px', flexWrap: 'wrap', marginBottom: '14px' }}>
+                                    <span className="hud-tag">
+                                        <span className="hud-pulse-dot" />
+                                        <span>LIVE HACKATHON</span>
+                                    </span>
+                                    <span className="hud-clock font-mono" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                                        <Clock size={14} style={{ color: 'var(--accent)' }} />
+                                        <span>{contest.deadline}</span>
+                                    </span>
+                                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', fontSize: '0.88rem', color: 'var(--text-secondary)' }}>
+                                        <Users size={15} />
+                                        <span>{contest.participants} Builders</span>
+                                    </span>
+                                </div>
+
+                                <h2 style={{
+                                    fontSize: 'clamp(1.8rem, 3.2vw, 2.6rem)',
+                                    fontWeight: 800,
+                                    marginBottom: '12px',
+                                    color: 'var(--text-primary)',
+                                    letterSpacing: '-0.02em'
+                                }}>
+                                    {contest.title}
+                                </h2>
+
+                                <p style={{
+                                    color: 'var(--text-secondary)',
+                                    marginBottom: '24px',
+                                    fontSize: '1.05rem',
+                                    lineHeight: '1.6',
+                                    maxWidth: '680px'
+                                }}>
                                     {contest.description}
                                 </p>
-                                <div style={{ display: 'flex', gap: '20px', marginBottom: '20px', color: 'var(--text-secondary)', fontSize: '0.95rem' }}>
-                                    <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                                        <strong>Deadline:</strong> {contest.deadline}
-                                    </span>
-                                    <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                                        <strong>Participants:</strong> {contest.participants}
-                                    </span>
-                                </div>
-                                <div style={{ background: 'rgba(192, 160, 128, 0.1)', padding: '15px', borderRadius: '10px', marginBottom: '20px', borderLeft: '4px solid var(--accent)' }}>
-                                    <strong style={{ display: 'block', marginBottom: '5px', color: 'var(--accent-hover)' }}>🏆 Prize</strong>
-                                    {contest.prize}
+
+                                {/* Shimmering Metallic Gold Prize Card */}
+                                <div style={{
+                                    display: 'inline-flex',
+                                    alignItems: 'center',
+                                    gap: '14px',
+                                    padding: '12px 20px',
+                                    borderRadius: '16px',
+                                    background: 'linear-gradient(135deg, rgba(245, 158, 11, 0.12) 0%, rgba(217, 119, 6, 0.05) 100%)',
+                                    border: '1px solid rgba(245, 158, 11, 0.3)',
+                                    boxShadow: '0 8px 25px -6px rgba(245, 158, 11, 0.25)',
+                                    marginBottom: '10px'
+                                }}>
+                                    <div style={{
+                                        width: '40px',
+                                        height: '40px',
+                                        borderRadius: '12px',
+                                        background: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        color: '#ffffff',
+                                        boxShadow: '0 4px 15px rgba(245, 158, 11, 0.4)'
+                                    }}>
+                                        <Trophy size={20} />
+                                    </div>
+                                    <div>
+                                        <span style={{ fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: 700, color: '#f59e0b', display: 'block' }}>
+                                            Cash Bounty Pool
+                                        </span>
+                                        <span style={{ fontSize: '1.35rem', fontWeight: 800, color: 'var(--text-primary)' }}>
+                                            {contest.prize}
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
-                            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', minWidth: '200px' }}>
+
+                            {/* Action Buttons Column with Magnetic Physics */}
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', minWidth: '200px' }}>
                                 {isAdmin ? (
-                                    <button
-                                        onClick={() => setShowCreateModal(true)}
-                                        className="btn btn-primary"
-                                        style={{ textAlign: 'center' }}
-                                    >
-                                        Create Contest
-                                    </button>
+                                    <MagneticButton onClick={() => setShowCreateModal(true)} strength={0.3}>
+                                        <button className="btn btn-primary" style={{ width: '100%', padding: '14px 24px' }}>
+                                            <Plus size={18} />
+                                            <span>Create Contest</span>
+                                        </button>
+                                    </MagneticButton>
                                 ) : (
-                                    <Link to={`/contest-registration/${contest._id}`} className="btn btn-primary" style={{ textAlign: 'center' }}>
-                                        Register Now
-                                    </Link>
+                                    <MagneticButton to={`/contest-registration/${contest._id}`} strength={0.35}>
+                                        <button className="btn btn-primary" style={{ width: '100%', padding: '14px 28px', fontSize: '1rem' }}>
+                                            <span>Register Now</span>
+                                            <ArrowRight size={18} />
+                                        </button>
+                                    </MagneticButton>
                                 )}
-                                <button
-                                    onClick={() => setShowDetailsModal(true)}
-                                    className="btn btn-outline"
-                                    style={{ textAlign: 'center' }}
-                                >
-                                    View Details
-                                </button>
+
+                                <MagneticButton onClick={() => setShowDetailsModal(true)} strength={0.25}>
+                                    <button className="btn btn-outline" style={{ width: '100%', padding: '14px 24px', fontSize: '1rem' }}>
+                                        <span>View Details</span>
+                                    </button>
+                                </MagneticButton>
                             </div>
                         </div>
                     </motion.div>
                 </AnimatePresence>
 
-                {/* Dots Indicator */}
-                <div style={{ display: 'flex', justifyContent: 'center', gap: '8px', marginTop: '20px' }}>
+                {/* Elongated Glowing Slider Indicator Pills */}
+                <div style={{ display: 'flex', justifyContent: 'center', gap: '8px', marginTop: '28px' }}>
                     {contests.map((_, idx) => (
                         <div
                             key={idx}
                             onClick={() => setCurrentIndex(idx)}
                             style={{
-                                width: '10px',
-                                height: '10px',
-                                borderRadius: '50%',
-                                background: idx === currentIndex ? 'var(--accent)' : 'var(--text-secondary)',
-                                opacity: idx === currentIndex ? 1 : 0.3,
+                                width: idx === currentIndex ? '32px' : '10px',
+                                height: '6px',
+                                borderRadius: '4px',
+                                background: idx === currentIndex ? 'var(--accent)' : 'var(--text-muted)',
+                                opacity: idx === currentIndex ? 1 : 0.35,
                                 cursor: 'pointer',
-                                transition: 'all 0.3s'
+                                transition: 'all 0.35s cubic-bezier(0.16, 1, 0.3, 1)',
+                                boxShadow: idx === currentIndex ? '0 0 10px var(--accent)' : 'none'
                             }}
                         />
                     ))}
@@ -727,16 +829,18 @@ const ContestSection = ({ isAdmin }) => {
                             background: 'var(--error)',
                             color: 'white',
                             border: 'none',
-                            padding: '5px 10px',
-                            borderRadius: '5px',
+                            padding: '6px 14px',
+                            borderRadius: '8px',
                             cursor: 'pointer',
+                            fontSize: '0.8rem',
+                            fontWeight: 600,
                             zIndex: 20
                         }}
                     >
                         Delete Contest
                     </button>
                 )}
-            </div>
+            </SpotlightCard>
 
             {/* Details Modal Portal */}
             {createPortal(

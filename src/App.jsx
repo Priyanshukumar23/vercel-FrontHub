@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
 import Navbar from './components/Navbar';
+import CyberFireCanvas from './components/CyberFireCanvas';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
@@ -18,6 +19,7 @@ function App() {
   return (
     <Router>
       <ThemeInitializer />
+      <CyberFireCanvas />
       <div className="app">
         <Navbar />
         <Routes>
@@ -43,10 +45,14 @@ function App() {
 const ThemeInitializer = () => {
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme');
-    if (savedTheme === 'dark') {
-      document.body.classList.add('dark-theme');
-    } else {
+    if (savedTheme === 'light') {
       document.body.classList.remove('dark-theme');
+    } else {
+      // Default to dark theme for signature cyber builder aesthetic
+      document.body.classList.add('dark-theme');
+      if (!savedTheme) {
+        localStorage.setItem('theme', 'dark');
+      }
     }
   }, []);
   return null;

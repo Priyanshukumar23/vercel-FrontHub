@@ -1,0 +1,235 @@
+/* =========================================
+   SkillSphere High-End About Page Styles
+   Inspired by Razorpay Buildathon & Cyber Hub
+   ========================================= */
+
+.about-page {
+    padding-top: 100px;
+    padding-bottom: 90px;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+/* Hero Section with 3D Sphere */
+.about-hero-section {
+    position: relative;
+    padding: 60px 0 80px 0;
+    text-align: center;
+    overflow: hidden;
+}
+
+.about-canvas-backdrop {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    max-width: 900px;
+    height: 480px;
+    z-index: 0;
+    opacity: 0.5;
+    pointer-events: all;
+}
+
+.about-hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 840px;
+    margin: 0 auto;
+    pointer-events: none;
+}
+
+.about-hero-content * {
+    pointer-events: auto;
+}
+
+.about-hero-title {
+    font-size: clamp(2.6rem, 5vw, 4.4rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    margin: 18px 0;
+    color: var(--text-primary);
+}
+
+.about-hero-subtitle {
+    font-size: 1.2rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    max-width: 700px;
+    margin: 0 auto 30px auto;
+}
+
+/* CAUTION / PROTOCOLS SECTION */
+.caution-section {
+    margin: 90px 0;
+}
+
+.caution-header {
+    text-align: center;
+    margin-bottom: 45px;
+}
+
+.caution-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 16px;
+    border-radius: 20px;
+    background: rgba(244, 63, 94, 0.12);
+    border: 1px solid rgba(244, 63, 94, 0.4);
+    color: var(--error);
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-family: 'JetBrains Mono', monospace;
+    margin-bottom: 14px;
+}
+
+.caution-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px;
+}
+
+.caution-card {
+    padding: 30px 26px;
+    border: 1px solid rgba(244, 63, 94, 0.25) !important;
+    background: var(--card-bg);
+}
+
+.caution-card-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.caution-icon-box {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: rgba(244, 63, 94, 0.12);
+    color: var(--error);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(244, 63, 94, 0.3);
+}
+
+.caution-index {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--error);
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.caution-card h3 {
+    font-size: 1.25rem;
+    color: var(--text-primary);
+    margin-bottom: 10px;
+}
+
+.caution-card p {
+    color: var(--text-secondary);
+    font-size: 0.92rem;
+    line-height: 1.6;
+}
+
+/* ARCHITECTURE / PILLARS SECTION */
+.pillars-section {
+    margin: 90px 0;
+}
+
+.pillars-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 28px;
+}
+
+.pillar-card {
+    padding: 36px 30px;
+}
+
+.pillar-icon-box {
+    width: 52px;
+    height: 52px;
+    border-radius: 16px;
+    background: var(--accent-light);
+    color: var(--accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--accent);
+    margin-bottom: 22px;
+}
+
+.pillar-card h3 {
+    font-size: 1.4rem;
+    margin-bottom: 12px;
+}
+
+.pillar-card p {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+/* ROADMAP SECTION */
+.roadmap-section {
+    margin: 100px 0;
+}
+
+.roadmap-timeline {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 24px;
+    position: relative;
+    margin-top: 40px;
+}
+
+.roadmap-card {
+    padding: 28px 24px;
+}
+
+.roadmap-phase-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+    display: inline-block;
+}
+
+.roadmap-card h4 {
+    font-size: 1.2rem;
+    margin-bottom: 8px;
+}
+
+.roadmap-card p {
+    font-size: 0.88rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+}
+
+/* FINAL CTA */
+.about-cta-section {
+    text-align: center;
+    padding: 70px 30px;
+    border-radius: 32px;
+    margin-top: 80px;
+    background: var(--card-bg);
+    border: 1px solid var(--glass-border);
+    position: relative;
+    overflow: hidden;
+}
+
+@media (max-width: 768px) {
+    .about-canvas-backdrop {
+        height: 340px;
+    }
+}
